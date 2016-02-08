@@ -1,0 +1,8 @@
+# Site settings
+title: "GitDash"
+description: "Hello, World!"
+baseurl: ""
+url: "http://alixedi.github.io/gitdash"
+
+# Chawwal
+chawwal: "Chawwal"

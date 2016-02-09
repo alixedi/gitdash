@@ -2,22 +2,55 @@
 layout: default
 ---
 
-<div class="home">
+  <div class="site-wrapper">
+    <div class="site-wrapper-inner">
+      <div class="cover-container">
+        <div class="inner cover">
+          <h1 class="brand">{{ dripl }}</h1>
+          <p class="message">{{ config.message }}</p>
+          <p>
+            <a href="{% url 'auth_start' %}" class="btn btn-hg btn-danger">Start Now</a>&nbsp;
+            <a data-toggle="lightbox" class="btn btn-hg btn-success" data-remote="http://player.vimeo.com/video/{{ config.video }}" href="http://vimeo.com/{{ config.video }}">Learn More</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <h1 class="page-heading">Posts</h1>
+  <div class="container">
+    
+    <div class="row">
+      <div class="col-sm-10 col-sm-offset-2">
+        <div id="initialDiv" class="parking" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+      </div>
+    </div>
 
-  <ul class="post-list">
-    {% for post in site.posts %}
-      <li>
-        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
+    <div class="row">
+      <div class="col-sm-10 col-sm-offset-2">
+        <div id="columnDiv" class="dropable" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+      </div>
+    </div>
+    
+    <div class="row full">
+      <div class="col-sm-2">
+        <div id="rowDiv" class="verticalChildren dropable"  ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+      </div>
+      <div id="pivot2" class="col-sm-10 fit"></div>
+    </div>
 
-        <h2>
-          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-        </h2>
-      </li>
-    {% endfor %}
-  </ul>
-
-  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
-
-</div>
+    <div class="row">
+      <div id="deriverSelectRoller" class="col-sm-10 col-sm-offset-2">
+        <div class="wrap">
+          <div class="scrollbar">
+            <div class="handle">
+                <div class="mousearea"></div>
+            </div>
+          </div>
+          <div class="frame" id="centered" style="height:50px;line-height:50px;">
+            <ul id='aggre' class="slidee clearfix" style="font-size:20px;">
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

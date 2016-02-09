@@ -34,21 +34,10 @@ $(function() {
   });
 
   // Bind favorites
-  $(".favorites").click(function(e) {
-    selectFavorite(e.target);
-  });
+  //$(".favorites").click(function(e) {
+  //  selectFavorite(e.target);
+  //});
 
-  // Init lightbox
-  $(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) { event.preventDefault(); $(this).ekkoLightbox(); });
-  
-  //Init masonry
-  var $container = $('#social');
-  $container.imagesLoaded(function(){
-    $container.masonry({
-      itemSelector : '.item',
-    });
-  });
-  
   // Get data
   $.get(initData, function(data) {
     results = $.parse(data);
@@ -59,7 +48,7 @@ $(function() {
     // Loading visulaization as per QueryString
     if (jQuery.isEmptyObject(queryStringDict)) {
         $("#table").pivot(results.results.rows);
-        selectFavorite(".favorites:first");
+        //selectFavorite(".favorites:first");
         }
     else {
         updateVisFromQueryString(queryStringDict);
@@ -72,7 +61,7 @@ $(function() {
           }
         });
         }
-    $('select').selectpicker();
+    //$('select').selectpicker();
   });
 });
 

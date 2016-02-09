@@ -2,55 +2,58 @@
 layout: default
 ---
 
-  <div class="site-wrapper">
-    <div class="site-wrapper-inner">
-      <div class="cover-container">
-        <div class="inner cover">
-          <h1 class="brand">{{ dripl }}</h1>
-          <p class="message">{{ config.message }}</p>
-          <p>
-            <a href="{% url 'auth_start' %}" class="btn btn-hg btn-danger">Start Now</a>&nbsp;
-            <a data-toggle="lightbox" class="btn btn-hg btn-success" data-remote="http://player.vimeo.com/video/{{ config.video }}" href="http://vimeo.com/{{ config.video }}">Learn More</a>
-          </p>
+<div class="site-wrapper">
+  <div class="site-wrapper-inner">
+    <div class="cover-container">
+      <div class="inner cover">
+
+  <div class="section-data">
+    <div class="container" style="width: auto;">
+      <div class="row">
+        <div class="col-sm-9 tablecol">
+          <div id="table"></div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="container">
-    
-    <div class="row">
-      <div class="col-sm-10 col-sm-offset-2">
-        <div id="initialDiv" class="parking" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-sm-10 col-sm-offset-2">
-        <div id="columnDiv" class="dropable" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-      </div>
-    </div>
-    
-    <div class="row full">
-      <div class="col-sm-2">
-        <div id="rowDiv" class="verticalChildren dropable"  ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-      </div>
-      <div id="pivot2" class="col-sm-10 fit"></div>
-    </div>
-
-    <div class="row">
-      <div id="deriverSelectRoller" class="col-sm-10 col-sm-offset-2">
-        <div class="wrap">
-          <div class="scrollbar">
-            <div class="handle">
-                <div class="mousearea"></div>
+        <div class="col-sm-3 menu">
+          <div class="well">
+            <div class="tab-pane" id="fiddle">
+              <div class="row">
+                <div id="parking" class="drop" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+              </div>
+              <div class="row">
+                <h5 class="text-left">Rows</h5>
+                <div id="rowdrop" class="drop" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+              </div>
+              <div class="row">
+                <h5 class="text-left">Columns</h5>
+                <div id="coldrop" class="drop" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+              </div>
+              <div class="row">
+                <h5 class="text-left">Values</h5>
+                <div id="valdrop" class="drop" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+              </div>
+              <div class="row">
+                <h5 class="text-left">Function</h5>
+                <p><select id="functions" class="form-control text-left updateViz" data-style="btn-default"></select></p>
+                <h5 class="text-left">Chart</h5>
+                <p><select id="charts" class="form-control text-left updateViz" data-style="btn-default"></select></p>
+                <hr>
+                <p>
+                  <a class="btn btn-default btn-lg" href="{{ data }}"><i class="glyphicon glyphicon-arrow-down"></i></a>&nbsp;
+                  <a href="https://twitter.com/share" class="btn btn-default btn-lg" data-related="driplapp" data-count="none" data-hashtags="#{{ config.hashtag }}" data-size="large"><i class="fa fa-twitter"></i></a>
+                  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                </p>
+              </div>
             </div>
           </div>
-          <div class="frame" id="centered" style="height:50px;line-height:50px;">
-            <ul id='aggre' class="slidee clearfix" style="font-size:20px;">
-            </ul>
-          </div>
         </div>
       </div>
     </div>
   </div>
+
+
+
+      </div>
+    </div>
+  </div>
+</div>
+

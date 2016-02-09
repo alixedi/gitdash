@@ -1,0 +1,53 @@
+body {
+      height: 100%;
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+    .drop {
+      border-radius: 8px;
+      padding: 4px;
+      min-height: 64px;
+      text-align: left;
+      background-color: #fff;
+    }
+    .menu {
+      padding: 32px;
+      text-align: center;
+    }
+    .well {
+      padding: 16px 32px;
+    }
+    .label {
+      display: inline-block;
+      cursor: pointer;
+      padding: 6px 8px;
+      margin: 6px 4px;
+      font-weight: normal;
+    }
+    .row {
+      padding-bottom: 8px;
+    }
+    .tablecol {
+      overflow:auto;
+      padding: 32px;
+    }
+    .section-data {
+      background-color: #fff;
+    }
+    .section-social {
+      background-color: #F5F5F5;
+      padding-top: 128px;
+      padding-bottom: 128px;
+      text-align: center;
+    }
+    .item {
+      width: 30%;
+      margin: 10px;
+      padding: 16px;
+      background-color: #FFF;
+      text-align: left;
+      font-size: 0.75em;
+    }
+    .favorites {
+    cursor: pointer;
+    }

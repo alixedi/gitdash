@@ -89,7 +89,6 @@ function updateVisFromQueryString(queryStrDict) {
   flushAndReset();
   $('#functions').val(queryStrDict.opt);
   $('#charts').val(queryStrDict.chartType);
-  $('select').selectpicker('render');
   var userColValues = queryStrDict.cols.split(',');
   var userRowValues = queryStrDict.rows.split(',');
   var userNumValues = queryStrDict.optVal.split(',');

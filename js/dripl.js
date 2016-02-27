@@ -27,6 +27,15 @@ function parseQueryString(queryString) {
   return urlParams
 }
 
+// trim all fields for objects in an Array
+function trimAll(objects) {
+  return $.map(objects, function(obj, i) {
+    for(key in obj)
+      obj[key] = $.trim(obj[key]);
+    return obj;
+  });
+}
+
 $(function() {
   // Bind Change in controls to trigger updateVisualization
   $(".updateViz").change(function() {
@@ -41,13 +50,14 @@ $(function() {
   // Get data
   $.get(initData, function(data) {
     results = $.parse(data);
+    data = trimAll(results.results.rows)
     // Init labels
     init_labels(results.results.fields);
     init_functions();
     init_charts();
     // Loading visulaization as per QueryString
     if (jQuery.isEmptyObject(queryStringDict)) {
-        $("#table").pivot(results.results.rows);
+        $("#table").pivot(data);
         //selectFavorite(".favorites:first");
         }
     else {

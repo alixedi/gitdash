@@ -1,17 +1,22 @@
 // Loading Google Viz API Core Charts
 google.load("visualization", "1", {packages:["corechart"]});
-renderers = $.extend($.pivotUtilities.renderers, 
+
+$.pivotUtilities.renderers = $.extend($.pivotUtilities.renderers,
+                                      $.pivotUtilities.gchart_renderers);
+
+/*
+renderers = $.extend($.pivotUtilities.renderers,
                      $.pivotUtilities.gchart_renderers,
                      {"Geo Chart": makeGoogleChart("GeoChart", {
                         region: mapRegion,
                         displayMode: "markers",
                         colorAxis: {colors: ["orange", "red"]}})});
+*/
 
 // Code for managing querystring
 (window.onpopstate = function () {
   var query  = window.location.search.substring(1);
   queryStringDict = parseQueryString(query);
-  
 })();
 
 //queryStringDict = urlParams;
@@ -20,7 +25,7 @@ function parseQueryString(queryString) {
   var match,
       pl     = /\+/g,  // Regex for replacing addition symbol with a space
       search = /([^&=]+)=?([^&]*)/g,
-      decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },   
+      decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
     urlParams = {};
     while (match = search.exec(queryString))
        urlParams[decode(match[1])] = decode(match[2]);
@@ -49,15 +54,15 @@ $(function() {
 
   // Get data
   $.get(initData, function(data) {
-    results = $.parse(data);
-    data = trimAll(results.results.rows)
+    results = Papa.parse(data, {header: true});
+    results.data = trimAll(results.data)
     // Init labels
-    init_labels(results.results.fields);
+    init_labels(results.meta.fields);
     init_functions();
     init_charts();
     // Loading visulaization as per QueryString
     if (jQuery.isEmptyObject(queryStringDict)) {
-        $("#table").pivot(data);
+        $("#table").pivot(results.data);
         //selectFavorite(".favorites:first");
         }
     else {
@@ -92,7 +97,7 @@ function flushAndReset() {
   $("#parking").empty();
 
   // Reset Parking
-  init_labels(results.results.fields);
+  init_labels(results.meta.fields);
 }
 
 function updateVisFromQueryString(queryStrDict) {
@@ -116,27 +121,13 @@ function init_labels(fields) {
 
 function init_functions() {
   $.each(Object.keys($.pivotUtilities.aggregators), function() {
-      var aggregationMappingDict = {
-          'sum':'Sum', 'count':'Count', 'average':'Average',
-          'sumAsFractionOfTotal':'% of Total (Sum)',
-          'sumAsFractionOfRow':'% of Row Total (Sum)',
-          'sumAsFractionOfCol':'% of Column Total (Sum)',
-          'countAsFractionOfTotal':'% of Total (Count)',
-          'countAsFractionOfRow':'% of Row Total (Count)',
-          'countAsFractionOfCol':'% of Column Total (Count)',
-          'countUnique':'Count Unique', 'listUnique':'List Unique',
-          'intSum':'intSum', 'sumOverSum':'sumOverSum',
-          'ub80':'Upper Bound Binomial', 'lb80':'Lower Bound Binomial',
-        };
-      if (this in aggregationMappingDict) {
-          var funcString = this.toString();
-          $("#functions").append($('<option></option>').attr("value", this).text(aggregationMappingDict[funcString]));
-        }
+      var funcString = this.toString();
+      $("#functions").append($('<option></option>').attr("value", this).text(funcString));
   });
 }
 
 function init_charts() {
-  $.each(Object.keys(renderers), function() {
+  $.each(Object.keys($.pivotUtilities.renderers), function() {
     $("#charts").append($('<option></option>').attr("value", this).text(this));
   })
 }
@@ -151,13 +142,13 @@ function updateVisualization() {
     }
 
 function applyVisualization(rows,cols,vals,operation,chartType) {
-    $("#table").pivot(results.results.rows, {
+    $("#table").pivot(results.data, {
         rows: rows,
         cols: cols,
         aggregator: $.pivotUtilities.aggregators[operation](vals),
-        renderer: renderers[$("#charts").val()],
+        renderer: $.pivotUtilities.renderers[$("#charts").val()],
     });
-    
+
     // Set QueryString
     var queryString = '?rows='+rows+'&cols='+cols+'&opt='+
                         operation+'&optVal='+vals+'&chartType='+chartType;

@@ -1,8 +1,27 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/pivot.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/gchart_renderers.min.js"></script>
+
+<script id="label-template" type="text/x-handlebars-template">
+{% raw %}
+	<button type="button" id="label-{{ i }}" data-value="{{ field }}"
+	class="btn btn-xs label {{ label }}" ondragstart="drag(event)" draggable="true"
+    {{#if filter}}
+	    data-toggle="popover" title="Select:" data-content='
+        <div>
+          <ul class="list-unstyled">
+            {{#each classifiers }}
+            <li><input type="checkbox" name="{{ value }}" value="{{ value }}" checked>&nbsp;{{ value }}</li>
+            {{/each}}
+          </ul>
+        </div>'
+    {{/if}}>{{ field }}</button>
+{% endraw %}
+</script>
+
 <script type="text/javascript">
   var initData = "{{ "/data/potus.csv" | prepend: site.baseurl }}";
   var mapRegion = "World";

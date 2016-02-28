@@ -41,6 +41,32 @@ function trimAll(objects) {
   });
 }
 
+
+// tries to find classifiers amongst fields
+function getClassifiers(data, fields) {
+  var classifiers = {};
+  for(var k in fields) {
+    var field = fields[k]
+    var ucol = $.unique(
+      $.map(data, function(val, i) {
+        return val[field];
+      })
+    );
+    if(ucol.length < data.length/2 & ucol.length > 1) {
+      var temp = [];
+      for(ui in ucol) {
+        temp.push({
+          'value': ucol[ui],
+          'selected': true
+        });
+      }
+      classifiers[field] = temp;
+    }
+  }
+  return classifiers
+}
+
+
 $(function() {
   // Bind Change in controls to trigger updateVisualization
   $(".updateViz").change(function() {
@@ -56,6 +82,8 @@ $(function() {
   $.get(initData, function(data) {
     results = Papa.parse(data, {header: true});
     results.data = trimAll(results.data)
+    // try and get classifiers
+    classifiers = getClassifiers(results.data, results.meta.fields);
     // Init labels
     init_labels(results.meta.fields);
     init_functions();
@@ -113,10 +141,28 @@ function updateVisFromQueryString(queryStrDict) {
   updateVisualization();
 }
 
+function showFilter(ev) {
+  console.log($(ev.target).attr("data-value"));
+}
+
+
 function init_labels(fields) {
+  var source = $("#label-template").html();
+  var template = Handlebars.compile(source);
   for (var i=0; i<fields.length; i++) {
-    $('#parking').append('<span class="label label-danger" id="f' + i + '" data-value="' + fields[i] + '" ondragstart="drag(event)" draggable="true">' + fields[i] + '</span> ');
+    var field = fields[i];
+    var label = "btn-primary";
+    var filter = null;
+    if(classifiers[field]) {
+      label = "btn-danger";
+      filter = 'onclick="showFilter(event)"';
+      var content = classifiers[field];
+    }
+    var context = {i: i, label: label, field: field, filter: filter, classifiers: classifiers[field]};
+    var html = template(context);
+    $('#parking').append(html);
   }
+  $('[data-toggle="popover"]').popover({html: true});
 }
 
 function init_functions() {
@@ -179,7 +225,7 @@ function drop(ev) {
   ev.preventDefault();
   var data = ev.dataTransfer.getData("Text");
   if($(ev.target).hasClass("drop")) {
-    ev.target.appendChild(document.getElementById(data));  
+    ev.target.appendChild(document.getElementById(data));
   }
   updateVisualization();
 }

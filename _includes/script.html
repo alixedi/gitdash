@@ -8,9 +8,8 @@
 <script id="label-template" type="text/x-handlebars-template">
 {% raw %}
 	<button type="button" id="label-{{ i }}" data-value="{{ field }}"
-	class="btn btn-xs label {{ label }}"
+	class="btn btn-xs label {{ label }}" ondragstart="drag(event)" draggable="true"
     {{#if filter}}
-      ondragstart="drag(event)" draggable="true"
 	    data-toggle="popover" title="Select:" data-content='
         <div>
           <ul class="list-unstyled">

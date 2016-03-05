@@ -114,7 +114,7 @@ function init_labels(fields) {
         var html = template(context);
         $('#parking').append(html);
     }
-    $('[data-toggle="popover"]').popover({html: true});
+    $('[data-toggle="popover"]').popover({html: true, container: "body"});
 }
 
 // Initialize aggregation functions

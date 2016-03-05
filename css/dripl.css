@@ -3,20 +3,26 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
 }
+
 .drop {
     border-radius: 4px;
     padding: 4px;
     min-height: 64px;
     text-align: left;
     background-color: #FFF;
+    display: table;
+    width: 100%;
 }
+
 .menu {
     padding: 32px;
     text-align: center;
 }
+
 .well {
     padding: 16px 32px;
 }
+
 .label {
     display: inline-block;
     cursor: pointer;
@@ -25,27 +31,24 @@ body {
     font-weight: normal;
     font-size: 10px;
 }
+
 .row {
     padding-bottom: 8px;
 }
+
 .tablecol {
     overflow:auto;
     padding: 32px;
 }
-.section-data {
-    background-color: #fff;
+
+.wrap {
+    display: table-cell;
+    vertical-align: middle;
+    text-align:center
 }
-.section-social {
-    background-color: #F5F5F5;
-    padding-top: 128px;
-    padding-bottom: 128px;
-    text-align: center;
-}
-.item {
-    width: 30%;
-    margin: 10px;
-    padding: 16px;
-    background-color: #FFF;
-    text-align: left;
-    font-size: .25em;
+
+.dotted {
+    padding: 5px;
+    border: 1px dashed #DDD;
+    font-size: 8px;
 }

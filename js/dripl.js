@@ -166,14 +166,14 @@ function init_labels(fields) {
 }
 
 function init_functions() {
-  $.each(Object.keys($.pivotUtilities.aggregators), function() {
+  $.each(["Count", "Count Unique Values", "Sum", "Average", "Minimum", "Maximum"], function() {
       var funcString = this.toString();
       $("#functions").append($('<option></option>').attr("value", this).text(funcString));
   });
 }
 
 function init_charts() {
-  $.each(Object.keys($.pivotUtilities.renderers), function() {
+  $.each(["Heatmap", "Line Chart", "Bar Chart", "Stacked Bar Chart", "Area Chart", "Scatter Chart"], function() {
     $("#charts").append($('<option></option>').attr("value", this).text(this));
   })
 }

@@ -2,52 +2,56 @@
 layout: default
 ---
 
-<div class="site-wrapper">
-  <div class="site-wrapper-inner">
-    <div class="cover-container">
-      <div class="inner cover">
-
-  <div class="section-data">
-    <div class="container" style="width: auto;">
-      <div class="row">
-        <div class="col-sm-9 tablecol">
-          <div id="table"></div>
-        </div>
-        <div class="col-sm-3 menu">
-          <div class="well">
-            <div class="tab-pane" id="fiddle">
-              <div class="row">
-                <div id="parking" class="drop" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-              </div>
-              <div class="row">
-                <h5 class="text-left">Rows</h5>
-                <div id="rowdrop" class="drop" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-              </div>
-              <div class="row">
-                <h5 class="text-left">Columns</h5>
-                <div id="coldrop" class="drop" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-              </div>
-              <div class="row">
-                <h5 class="text-left">Values</h5>
-                <div id="valdrop" class="drop" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-              </div>
-              <div class="row">
-                <h5 class="text-left">Function</h5>
-                <p><select id="functions" class="form-control text-left updateViz" data-style="btn-default"></select></p>
-                <h5 class="text-left">Chart</h5>
-                <p><select id="charts" class="form-control text-left updateViz" data-style="btn-default"></select></p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-
-      </div>
-    </div>
-  </div>
+<!-- Sidebar -->
+<div id="sidebar-wrapper">
+    <ul class="sidebar-nav">
+        <li class="sidebar-brand">
+            <a href="github.com/alixedi/gitdash">GitDash</a>
+        </li>
+        <li>
+            <h6>Free, open-source, GitHub powered dashboards for hackers. <a href="https://github.com/alixedi/gitdash">Learn More</a></h6>
+            <!-- Place this tag where you want the button to render. -->
+            <a class="github-button" href="https://github.com/alixedi/gitdash" data-icon="octicon-star" aria-label="Star alixedi/gitdash on GitHub">Star</a>
+            <!-- Place this tag where you want the button to render. -->
+            <a class="github-button" href="https://github.com/alixedi/gitdash/fork" data-icon="octicon-repo-forked" aria-label="Fork alixedi/gitdash on GitHub">Fork</a>
+            <br><br>
+        </li>
+        <li>
+            <div id="parking" class="drop" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        </li>
+        <li>
+            <h5 class="text-left">Rows</h5>
+            <div id="rowdrop" class="drop" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        </li>
+        <li>
+            <h5 class="text-left">Columns</h5>
+            <div id="coldrop" class="drop" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        </li>
+        <li>
+            <h5 class="text-left">Values</h5>
+            <div id="valdrop" class="drop" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        </li>
+        <li>
+            <h5 class="text-left">Function</h5>
+            <p><select id="functions" class="form-control text-left updateViz" data-style="btn-default"></select></p>
+        </li>
+        <li>
+            <h5 class="text-left">Chart</h5>
+            <p><select id="charts" class="form-control text-left updateViz" data-style="btn-default"></select></p>
+        </li>
+    </ul>
 </div>
+<!-- /#sidebar-wrapper -->
 
+<!-- Page Content -->
+<div id="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="table"></div>
+                <!-- <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>-->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /#page-content-wrapper -->

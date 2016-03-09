@@ -31,16 +31,17 @@ function mapper(objects) {
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     return $.map(objects, function(obj, i) {
+        var nobj = {};
         for(var key in obj) {
             var tkey = $.trim(key);
-            obj[tkey] = $.trim(obj[key]);
-            if($.inArray(key.trim(), dateCols) != -1) {
+            nobj[tkey] = $.trim(obj[key]);
+            if($.inArray(tkey, dateCols) != -1) {
                 var date = new Date(Date.parse(obj[key]));
-                obj[tkey + ' [Year]'] = date.getFullYear();
-                obj[tkey + ' [Month]'] = months[date.getMonth()];
+                nobj[tkey + ' [Year]'] = date.getFullYear();
+                nobj[tkey + ' [Month]'] = months[date.getMonth()];
             }
         }
-        return obj;
+        return nobj;
     });
 }
 
@@ -55,14 +56,14 @@ function getClassifiers(data, fields) {
       })
     );
     if(ucol.length < data.length/2 & ucol.length > 1) {
-      var temp = [];
-      for(ui in ucol) {
-        temp.push({
-          'value': ucol[ui],
-          'selected': true
-        });
-      }
-      classifiers[field.trim()] = temp;
+        var temp = [];
+        for(ui in ucol) {
+            temp.push({
+                'value': ucol[ui],
+                'selected': true
+            });
+        }
+        classifiers[field.trim()] = temp;
     }
   }
   return classifiers
@@ -78,6 +79,9 @@ $(function() {
   // Get data
   $.get(initData, function(data) {
     results = Papa.parse(data, {header: true});
+    results.meta.fields = $.map(results.meta.fields, function(v, i) {
+        return $.trim(v);
+    });
     results.data = mapper(results.data);
     for(i in dateCols) {
         results.meta.fields.push(dateCols[i] + " [Year]");
@@ -91,7 +95,7 @@ $(function() {
     init_charts();
     // Loading visulaization as per QueryString
     if (jQuery.isEmptyObject(queryStringDict))
-        $("#table").pivot(results.data);
+        updateVisualization();
     else
     updateVisFromQueryString(queryStringDict);
   });
@@ -114,7 +118,6 @@ function init_labels(fields) {
         var html = template(context);
         $('#parking').append(html);
     }
-    $('[data-toggle="popover"]').popover({html: true, container: "body"});
 }
 
 // Initialize aggregation functions
@@ -151,11 +154,29 @@ function updateVisFromQueryString(queryStrDict) {
   adjustInitialDrag('parking', 'coldrop', userColValues);
   adjustInitialDrag('parking', 'rowdrop', userRowValues);
   adjustInitialDrag('parking', 'valdrop', userNumValues);
+  for(fld in classifiers) {
+    var cla = classifiers[fld];
+    var vals = queryStrDict[fld].split(',');
+    for(i in cla) {
+        if($.inArray(cla[i].value, vals) != -1) {
+            cla[i].selected = false;
+        }
+    }
+  }
   updateVisualization();
 }
 
 function showFilter(ev) {
   console.log($(ev.target).attr("data-value"));
+}
+
+function getFiltersQuery() {
+    var res = "";
+    for(fld in classifiers) {
+        var tmp = $.grep(classifiers[fld], function(v, i) {return !v.selected});
+        res += fld + "=" + $.map(tmp, function(v, i) {return v.value}) + "&";
+    }
+    return res;
 }
 
 function updateVisualization() {
@@ -174,11 +195,25 @@ function applyVisualization(rows, cols, vals, agg, chart) {
         cols: cols,
         aggregator: $.pivotUtilities.aggregators[agg](vals),
         renderer: $.pivotUtilities.renderers[chart],
+        filter: function(rec) {
+            for(f in classifiers) {
+                cla = classifiers[f];
+                for(i in cla) {
+                    if(!cla[i].selected && (rec[f] == cla[i].value)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
     });
+    $('#table > table').removeClass('pvtTable').addClass('table');
+    $('#table > table > :first').wrap('<thead></thead>');
+    $('#table > table > :gt(0)').wrap('<tbody></tbody>');
     // Set QueryString
     var queryString = '?rows=' + rows + '&cols=' + cols +
                       '&vals=' + vals + '&agg=' + agg +
-                      '&chart=' + chart;
+                      '&chart=' + chart + "&" + getFiltersQuery();
     // set URL
     history.pushState({}, document.title, queryString);
 }
@@ -225,4 +260,36 @@ function appendLabel(target, label) {
     if(labels.length == 0)
         $(target).empty();
     $(target).append(label);
+}
+
+function updateFilter(el) {
+    var cb = $(el);
+    var field = cb.attr("name");
+    var value = cb.attr("value");
+    var result = $.grep(classifiers[field], function(e){
+        return e.value == value; });
+    result[0].selected = !result[0].selected;
+    //window.location.search += "&" + getFilterQuerystring()
+    updateVisualization();
+}
+
+function showPopover(el) {
+    var cb = $(el);
+    var pop = $(".popover:visible");
+    if(pop.length) {
+        cb.popover("destroy");
+        return;
+    }
+    var field = cb.attr("data-value");
+    var source = $("#popover-template").html();
+    var template = Handlebars.compile(source);
+    var content = template({classifiers: classifiers[field], field: field});
+    $(cb).popover({
+        html: true,
+        container: "body",
+        title: field,
+        content: content,
+        trigger: "click focus"
+    });
+    $(cb).popover("show");
 }

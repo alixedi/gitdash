@@ -8,19 +8,22 @@
 <script id="label-template" type="text/x-handlebars-template">
 {% raw %}
 	<button type="button" id="label-{{ i }}" data-value="{{ field }}"
-	class="btn btn-xs label {{ label }}" ondragstart="drag(event)" draggable="true"
-    {{#if filter}}
-	    data-toggle="popover" title="Select:" data-content='
-        <div>
-          <ul class="list-unstyled">
-            {{#each classifiers }}
-            <li><input type="checkbox" name="{{ value }}" value="{{ value }}" checked>&nbsp;{{ value }}</li>
-            {{/each}}
-          </ul>
-        </div>'
-    {{/if}}>{{ field }}</button>
+	class="btn btn-xs label {{ label }}" ondragstart="drag(event)" draggable="true" {{#if filter}}onclick="showPopover(this);"{{/if}}>{{ field }}</button>
 {% endraw %}
 </script>
+
+<script id="popover-template" type="text/x-handlebars-template">
+{% raw %}
+<div class="popover-content">
+  <ul class="list-unstyled">
+    {{#each classifiers }}
+    <li><input type="checkbox" name="{{ ../field }}" value="{{ value }}" {{selected}} {{#if selected}}checked{{/if}} onclick="updateFilter(this);">&nbsp;{{ value }}</li>
+    {{/each}}
+  </ul>
+</div>
+{% endraw %}
+</script>
+
 
 <script type="text/javascript">
   var initData = "{{ "/data/potus.csv" | prepend: site.baseurl }}";

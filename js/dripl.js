@@ -207,7 +207,7 @@ function applyVisualization(rows, cols, vals, agg, chart) {
             return true;
         }
     });
-    $('#table > table').removeClass('pvtTable').addClass('table');
+    $('#table > table').removeClass('pvtTable').addClass('table table-condensed table-bordered');
     $('#table > table > :first').wrap('<thead></thead>');
     $('#table > table > :gt(0)').wrap('<tbody></tbody>');
     // Set QueryString

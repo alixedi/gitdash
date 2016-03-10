@@ -107,10 +107,10 @@ function init_labels(fields) {
     var template = Handlebars.compile(source);
     for (var i in fields) {
         var field = fields[i].trim();
-        var label = "btn-primary";
+        var label = "btn-info";
         var filter = null;
         if(classifiers[field]) {
-            label = "btn-danger";
+            label = "btn-primary";
             filter = 'onclick="showFilter(event)"';
             var content = classifiers[field];
         }
@@ -289,7 +289,7 @@ function showPopover(el) {
         container: "body",
         title: field,
         content: content,
-        trigger: "click focus"
+        trigger: "click"
     });
     $(cb).popover("show");
 }

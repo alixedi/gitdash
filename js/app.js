@@ -287,9 +287,6 @@ function allowDrop(ev) {
 function drag(ev) {
     ev.dataTransfer.setData("label", ev.target.id);
     var labels = $(ev.target).siblings("button");
-    if(labels.length == 0) {
-        $(ev.target).after('<div class="wrap"><span class="dotted">Drag items here.</span></div>');
-    }
 }
 
 function drop(ev) {

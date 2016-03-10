@@ -5,6 +5,48 @@ google.load("visualization", "1", {packages:["corechart"]});
 $.pivotUtilities.renderers = $.extend($.pivotUtilities.renderers,
                                       $.pivotUtilities.gchart_renderers);
 
+// Define the tour
+tour = new Tour({
+    steps: [
+    {
+        element: "#parking",
+        title: "Step-1",
+        content: 'The little blue things here represent columns from your CSV. Try dragging "Party" to the box called "Columns".'
+    },
+    {
+        element: "#coldrop",
+        title: "Step-2",
+        content: 'You just grouped your data by "Party". Well done! Every blue "Label" here can be dragged around and put into different boxes.'
+    },
+    {
+        element: "#parking",
+        title: "Step-3",
+        content: 'Lets try and put "Home State" into the "Rows" box and see what happens.'
+    },
+    {
+        element: "#rowdrop",
+        title: "Step-4",
+        content: 'Now we are looking at your data grouped by party and home state. The outliers are red - Notice that no less than 6 Republican presidents hailed from Ohio!'
+    },
+    {
+        element: "#charts",
+        title: "Step-5",
+        content: 'We can choose from a range of pretty charts to visualize our data. Try selecting "Stacked Bar Chart" from this dropdown menu.'
+    },
+    {
+        element: "#parking",
+        title: "Step-6",
+        content: 'The labels that are dark blue can be clicked. Try click on "Took office [Month]". Uncheck all the months here except December.',
+        reflex: true
+    },
+    {
+        element: "#parking",
+        title: "Step-7",
+        content: 'Awesome work! Finally, if you want to share your dashboard on social media, copy/paste the URL of this page and you are done!',
+        reflex: true
+    },
+]});
+
 // Code for managing querystring
 (window.onpopstate = function () {
     var query  = window.location.search.substring(1);
@@ -98,6 +140,10 @@ $(function() {
         updateVisualization();
     else
     updateVisFromQueryString(queryStringDict);
+    // start tour
+    tour.init(true);
+    tour.start(true);
+
   });
 });
 

@@ -76,7 +76,8 @@ function mapper(objects) {
         var nobj = {};
         for(var key in obj) {
             var tkey = $.trim(key);
-            nobj[tkey] = $.trim(obj[key]);
+            var tval = $.trim(obj[key]);
+            nobj[tkey] = (tval == NaN)? "": tval;
             if($.inArray(tkey, dateCols) != -1) {
                 var date = new Date(Date.parse(obj[key]));
                 nobj[tkey + ' [Year]'] = date.getFullYear();
@@ -87,17 +88,28 @@ function mapper(objects) {
     });
 }
 
+function unique2(data) {
+    var fieldArray = {}; // object instead of array
+    $.each(data, function(i, item){
+        fieldArray[item] = item;
+    });
+    return $.map(fieldArray, function(v, i) { return v });
+}
+
+function unique(array) {
+    return $.grep(array, function(el, index) {
+        return index === $.inArray(el, array);
+    });
+}
+
 // tries to find classifiers amongst fields
 function getClassifiers(data, fields) {
   var classifiers = {};
   for(var k in fields) {
     var field = fields[k];
-    var ucol = $.unique(
-      $.map(data, function(val, i) {
-        return val[field];
-      })
-    );
-    if(ucol.length < data.length/2 & ucol.length > 1) {
+    var col = $.map(data, function(v, i) { return v[field] });
+    var ucol = unique(col);
+    if(ucol.length < data.length/4 & ucol.length > 1) {
         var temp = [];
         for(ui in ucol) {
             temp.push({
@@ -120,11 +132,12 @@ $(function() {
 
   // Get data
   $.get(initData, function(data) {
-    results = Papa.parse(data, {header: true});
+    results = Papa.parse(data, {header: true, skipEmptyLines: true});
     results.meta.fields = $.map(results.meta.fields, function(v, i) {
         return $.trim(v);
     });
     results.data = mapper(results.data);
+    dateCols = dateCols.filter(function(el) { return el != "" });
     for(i in dateCols) {
         results.meta.fields.push(dateCols[i] + " [Year]");
         results.meta.fields.push(dateCols[i] + " [Month]");

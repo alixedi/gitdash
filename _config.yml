@@ -6,16 +6,16 @@
 # 'jekyll serve'. If you change this file, please restart the server process.
 
 # Site settings
-title: US Presidents
+title: Pakistan T20
 email: your-email@domain.com
 description: >
-  Sample dataset containing all the POTUS in history.
+  Ball-by-ball record of T20s played by Pakistan.
 baseurl: "/gitdash" # the subpath of your site, e.g. /blog
 url: "http://alixedi.github.io" # the base hostname & protocol for your site
 twitter_username: alixedi
 github_username:  alixedi
 analytics: "YOUR_GOOGLE_ANALYTICS_CODE_HERE"
-date_columns: "Took office, Left office"
+date_columns: ""
 
 # Build settings
 markdown: kramdown

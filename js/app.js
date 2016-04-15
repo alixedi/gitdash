@@ -1,7 +1,7 @@
 // Loading Google Viz API Core Charts
 google.load("visualization", "1", {packages:["corechart"]});
 
-// Load up Google chart renderers
+// Load up Google chart renderers for pivot table
 $.pivotUtilities.renderers = $.extend($.pivotUtilities.renderers,
                                       $.pivotUtilities.gchart_renderers);
 
@@ -88,39 +88,64 @@ function mapper(objects) {
     });
 }
 
-function unique2(data) {
-    var fieldArray = {}; // object instead of array
-    $.each(data, function(i, item){
-        fieldArray[item] = item;
-    });
-    return $.map(fieldArray, function(v, i) { return v });
+function getFilterVals(fields) {
+    var query  = window.location.search.substring(1);
+    var filters = parseQueryString(query);
+    var filterVals = {}
+    for(fi in fields) {
+        var field = fields[fi];
+        if((field in filters) && (filters[field].length > 0)) {
+            filterVals[field] = {};
+            var vals = filters[field].split(',');
+            for(vi in vals) {
+                var val = vals[vi];
+                filterVals[field][val] = true;
+            }
+        }
+    }
+    return filterVals;
 }
 
-function unique(array) {
-    return $.grep(array, function(el, index) {
-        return index === $.inArray(el, array);
-    });
+function filterRecord(rec, fVals) {
+    for(field in rec) {
+        if(field in fVals) {
+            if(rec[field] in fVals[field]) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 // tries to find classifiers amongst fields
-function getClassifiers(data, fields) {
-  var classifiers = {};
-  for(var k in fields) {
-    var field = fields[k];
-    var col = $.map(data, function(v, i) { return v[field] });
-    var ucol = unique(col);
-    if(ucol.length < data.length/4 & ucol.length > 1) {
-        var temp = [];
-        for(ui in ucol) {
-            temp.push({
-                'value': ucol[ui],
-                'selected': true
-            });
-        }
-        classifiers[field.trim()] = temp;
+function init_classifiers(data, fields) {
+  // init classifiers
+  classifiers = {};
+  // in case of a querystring, we parse it to get the filter values
+  var fvals = getFilterVals(fields);
+  // iterate over data and load vals in classifier
+  for(var di in data) {
+    var rec = data[di];
+    var filterRec = filterRecord(rec, fvals);
+    // The purpose of the following was to do something with the
+    // filters based on a selected filter - so for instance if
+    // the user deselects England from the teams, it is logical
+    // to not have England amongst the toss winners.
+    if(filterRec) continue;
+
+    for(field in rec) {
+        var val = rec[field];
+        if(!(field in classifiers)) classifiers[field] = {};
+        classifiers[field][val] = true;
     }
   }
-  return classifiers
+  // delete c that are not useful
+  for(field in classifiers) {
+    var len = Object.keys(field).length;
+    if(len > (data.length/400)) {
+        delete classifiers[fi];
+    }
+  }
 }
 
 
@@ -143,16 +168,15 @@ $(function() {
         results.meta.fields.push(dateCols[i] + " [Month]");
     }
     // try and get classifiers
-    classifiers = getClassifiers(results.data, results.meta.fields);
+    init_classifiers(results.data, results.meta.fields);
     // Init labels
     init_labels(results.meta.fields);
     init_functions();
     init_charts();
     // Loading visulaization as per QueryString
-    if (jQuery.isEmptyObject(queryStringDict))
+    if(jQuery.isEmptyObject(queryStringDict))
         updateVisualization();
-    else
-    updateVisFromQueryString(queryStringDict);
+    else updateVisFromQueryString(queryStringDict);
     // start tour
     tour.init(true);
     tour.start(true);
@@ -168,12 +192,12 @@ function init_labels(fields) {
         var field = fields[i].trim();
         var label = "btn-info";
         var filter = null;
-        if(classifiers[field]) {
+        if(field in classifiers) {
             label = "btn-primary";
             filter = 'onclick="showFilter(event)"';
-            var content = classifiers[field];
+            //var content = classifiers[field];
         }
-        var context = {i: i, label: label, field: field, filter: filter, classifiers: classifiers[field]};
+        var context = {i: i, label: label, field: field, filter: filter};
         var html = template(context);
         $('#parking').append(html);
     }
@@ -213,27 +237,28 @@ function updateVisFromQueryString(queryStrDict) {
   adjustInitialDrag('parking', 'coldrop', userColValues);
   adjustInitialDrag('parking', 'rowdrop', userRowValues);
   adjustInitialDrag('parking', 'valdrop', userNumValues);
-  for(fld in classifiers) {
-    var cla = classifiers[fld];
-    var vals = queryStrDict[fld].split(',');
-    for(i in cla) {
-        if($.inArray(cla[i].value, vals) != -1) {
-            cla[i].selected = false;
+  for(var field in classifiers) {
+    if(field in queryStringDict) {
+        var fieldq = queryStringDict[field];
+        if(fieldq.length > 0) {
+            var vals = queryStrDict[field].split(',');
+            for(var vi in vals) classifiers[field][vals[vi]] = false;
         }
     }
   }
   updateVisualization();
 }
 
-function showFilter(ev) {
-  console.log($(ev.target).attr("data-value"));
-}
-
 function getFiltersQuery() {
     var res = "";
-    for(fld in classifiers) {
-        var tmp = $.grep(classifiers[fld], function(v, i) {return !v.selected});
-        res += fld + "=" + $.map(tmp, function(v, i) {return v.value}) + "&";
+    for(var field in classifiers) {
+        var vals = classifiers[field];
+        var temp = [];
+        for(var val in vals) {
+            var selected = vals[val];
+            if(!selected) temp.push(val);
+        }
+        res += field + "=" + temp + "&";
     }
     return res;
 }
@@ -255,13 +280,10 @@ function applyVisualization(rows, cols, vals, agg, chart) {
         aggregator: $.pivotUtilities.aggregators[agg](vals),
         renderer: $.pivotUtilities.renderers[chart],
         filter: function(rec) {
-            for(f in classifiers) {
-                cla = classifiers[f];
-                for(i in cla) {
-                    if(!cla[i].selected && (rec[f] == cla[i].value)) {
-                        return false;
-                    }
-                }
+            for(fi in classifiers) {
+                var val = rec[fi];
+                var res = classifiers[fi][val];
+                if(!res) return res;
             }
             return true;
         }
@@ -322,9 +344,7 @@ function updateFilter(el) {
     var cb = $(el);
     var field = cb.attr("name");
     var value = cb.attr("value");
-    var result = $.grep(classifiers[field], function(e){
-        return e.value == value; });
-    result[0].selected = !result[0].selected;
+    classifiers[field][value] = !classifiers[field][value];
     //window.location.search += "&" + getFilterQuerystring()
     updateVisualization();
 }

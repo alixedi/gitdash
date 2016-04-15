@@ -52,3 +52,9 @@ body {
     border: 1px dashed #DDD;
     font-size: 8px;
 }
+
+/*
+.popover-content {
+   height: 250px;
+   overflow-y: scroll;
+}*/

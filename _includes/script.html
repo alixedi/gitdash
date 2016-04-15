@@ -18,7 +18,7 @@
 <div class="popover-content">
   <ul class="list-unstyled">
     {{#each classifiers }}
-    <li><input type="checkbox" name="{{ ../field }}" value="{{ value }}" {{selected}} {{#if selected}}checked{{/if}} onclick="updateFilter(this);">&nbsp;{{ value }}</li>
+    <li><input type="checkbox" name="{{ ../field }}" value="{{ @key }}" {{ this }} {{#if this}}checked{{/if}} onclick="updateFilter(this);">&nbsp;{{ @key }}</li>
     {{/each}}
   </ul>
 </div>

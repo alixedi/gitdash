@@ -6,10 +6,10 @@
 # 'jekyll serve'. If you change this file, please restart the server process.
 
 # Site settings
-title: Pakistan T20
+title: US Presidents
 email: your-email@domain.com
 description: >
-  Ball-by-ball record of T20s played by Pakistan.
+  Data about all the US presidents in history.
 baseurl: "/gitdash" # the subpath of your site, e.g. /blog
 url: "http://alixedi.github.io" # the base hostname & protocol for your site
 twitter_username: alixedi

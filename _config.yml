@@ -15,7 +15,7 @@ url: "http://alixedi.github.io" # the base hostname & protocol for your site
 twitter_username: alixedi
 github_username:  alixedi
 analytics: "YOUR_GOOGLE_ANALYTICS_CODE_HERE"
-date_columns: ""
+date_columns: "Took office, Left office"		
 
 # Build settings
 markdown: kramdown
